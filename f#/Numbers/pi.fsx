@@ -10,5 +10,5 @@ let pi n =
     let total = Seq.reduce (+) terms
     3.0 + total
     
-let input = 60
-printfn "pi ~= %f" <| pi input
+let input = 1214
+printfn "pi ~= %.10f" <| pi input
