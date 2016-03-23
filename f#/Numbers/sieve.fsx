@@ -12,10 +12,12 @@ let primes n =
         then
             let nextNumber = Array.get results i
             results <-
-                    Set.ofSeq (seq { for j in nextNumber .. n -> nextNumber * j })
+                    Set.ofSeq (seq { for j in (pown nextNumber 2) .. nextNumber .. n -> j })
                     |> fun nextSet -> step results nextSet
 
-    results
+    Seq.ofArray results
 
-let lePrimes = primes 100
-printf "%A \n(length = %d)" <| lePrimes <| Array.length lePrimes
+let lePrimes = primes 1000000
+printfn "%A" lePrimes
+printfn "(length = %d)" <| Seq.length lePrimes
+printfn "(last prime = %d)" <| Seq.last lePrimes
