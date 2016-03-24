@@ -1,21 +1,27 @@
 let primes n =
-    let step current toRemove =
-        current
-        |> (fun nums -> Set.difference (Set.ofArray nums) toRemove)
-        |> Set.toArray
-
-    let natNumbers = Array.ofSeq (seq { for i in 2 .. n -> i })
-    let mutable results = natNumbers
-    
-    for i in 0 .. int (sqrt (float n)) do
-        if Array.length results > i
+    let generateStep multiplier limit removals =
+        if not (Set.contains multiplier removals)
         then
-            let nextNumber = Array.get results i
-            results <-
-                    Set.ofSeq (seq { for j in (pown nextNumber 2) .. nextNumber .. n -> j })
-                    |> fun nextSet -> step results nextSet
+            seq { for j in (pown multiplier 2) .. multiplier .. limit -> j }
+            |> Set.ofSeq
+            |> Set.union removals
+        else removals
 
-    Seq.ofArray results
+    let rec runTest multipliers limit removals =
+        let multipler = List.head multipliers
+
+        if multipler >= int (sqrt (float limit))
+        then
+            removals
+        else
+            let updatedRemovals = generateStep multipler limit removals
+            runTest (List.tail multipliers) limit updatedRemovals
+
+    let startSeq = seq { for i in 2 .. n -> i }
+    
+    List.ofSeq startSeq
+    |> fun lst -> runTest lst n Set.empty
+    |> Set.difference (Set.ofSeq startSeq)
 
 let lePrimes = primes 1000000
 printfn "%A" lePrimes
