@@ -10,7 +10,7 @@ let primes n =
     let rec runTest multipliers limit removals =
         let multipler = List.head multipliers
 
-        if multipler >= int (sqrt (float limit))
+        if multipler > int (sqrt (float limit))
         then
             removals
         else
@@ -23,7 +23,7 @@ let primes n =
     |> fun lst -> runTest lst n Set.empty
     |> Set.difference (Set.ofSeq startSeq)
 
-let lePrimes = primes 1000000
+let lePrimes = primes 7
 printfn "%A" lePrimes
 printfn "(length = %d)" <| Seq.length lePrimes
 printfn "(last prime = %d)" <| Seq.last lePrimes
