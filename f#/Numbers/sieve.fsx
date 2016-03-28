@@ -17,13 +17,16 @@ let primes n =
             let updatedRemovals = generateStep multipler limit removals
             runTest (List.tail multipliers) limit updatedRemovals
 
-    let startSeq = seq { for i in 2 .. n -> i }
-    
-    List.ofSeq startSeq
-    |> fun lst -> runTest lst n Set.empty
-    |> Set.difference (Set.ofSeq startSeq)
+    match n with
+        | 1 -> Set.empty
+        | _ ->
+            let startSeq = List.ofSeq (seq { for i in 2 .. n -> i })
+            
+            startSeq
+            |> fun lst -> runTest lst n Set.empty
+            |> Set.difference (Set.ofSeq startSeq)
 
-let lePrimes = primes 7
-printfn "%A" lePrimes
-printfn "(length = %d)" <| Seq.length lePrimes
-printfn "(last prime = %d)" <| Seq.last lePrimes
+// let lePrimes = primes 1
+// printfn "%A" lePrimes
+// printfn "(length = %d)" <| Seq.length lePrimes
+// printfn "(last prime = %d)" <| Seq.last lePrimes
