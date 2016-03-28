@@ -4,7 +4,7 @@ Project List
 A list of practical projects than anyone can solve in any programming language. These projects are
 divided in categories and each category has its own folder.
 
-This is a project to learn Python, but feel free to fork it and resolve the project list with
+This is a project to learn [insert language here], but feel free to fork it and resolve the project list with
 any programming language.
 
 ### Tasks
@@ -27,21 +27,16 @@ any programming language.
 
 Some details about this repo:
 
-* I will use Python because is the language that I want to learn.
-* Maybe some algorithms are no the best. You can add a comment to improved.
+* Maybe some algorithms are not the best. You can add a comment to improved.
 * I will cover some third party libraries.
 * I may be not able to complete all these tasks.
 * There is not a specific order
-* Page for Projects
-
 
 ToDO
 ==============
 
 * Add unit testing
 * New categories
-* Videogames tasks with Pygame
-
 
 List of tasks
 ==============
@@ -52,7 +47,7 @@ List of tasks
 
 ![(Completed!)][checkmark]**Fibonacci Sequence** - Enter a number and have the program generate the Fibonacci sequence to that number or to the Nth number.
 
-**Prime Factorization** - Have the user enter a number and find all Prime Factors (if there are any) and display them.
+![(Completed!)][checkmark]**Prime Factorization** - Have the user enter a number and find all Prime Factors (if there are any) and display them.
 
 
 **Mortgage Calculator** - Calculate the monthly payments of a fixed term mortgage over given Nth terms at a given interest rate. Also figure out how long it will take the user to pay back the loan.
