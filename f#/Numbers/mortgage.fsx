@@ -1,26 +1,19 @@
+#load "Money.fs"
 open System
+open FSharp.Numerics
 
 type PaymentEntry = {
-    toInterest : float;
-    toPrinciple : float;
-    principleLeft : float;
+    toInterest : Money;
+    toPrinciple : Money;
+    principleLeft : Money;
     month : int;
     };
 
-(* Variables in calculation;
- *  P - Principle (like 100k loan for the house)
- *  r - Monthly interest rate (divide annual by 12 months)
- *  n - Total payments being made (months the loan will last)
- *
- *         r(1 + r)^n
- * M = P --------------
- *        (1 + r)^n - 1
- *)
-let monthlyPayments p r n =
+let monthlyPayments (p:Money) r n =
     let rFactor = (1.0 + r) ** float(n)
-    Math.Round(p * ((r * rFactor) / (rFactor - 1.0)), 2)
+    p * ((r * rFactor) / (rFactor - 1.0))
 
-let step (p:float) r m i =
+let step (p:Money) r m i =
     let toInterest = p * r
     let toPrinciple = m - toInterest
     let newPrinciple = p - toPrinciple
@@ -28,7 +21,7 @@ let step (p:float) r m i =
     {
         toInterest = toInterest;
         toPrinciple = min toPrinciple (newPrinciple + toPrinciple); (* newPrinciple < 0 => last payment. Remove leftover! *)
-        principleLeft = max (Math.Round(newPrinciple, 2)) 0.0; (* Either we have payments left or we're done! *)
+        principleLeft = max newPrinciple (Money 0.0); (* Either we have payments left or we're done! *)
         month = i;
         }
 
@@ -36,7 +29,7 @@ let schedule p r m =
     let rec scheduleAux q sched i =
         let result = step q r m i
         
-        if q > 0.0
+        if q > Money 0.0
         then scheduleAux result.principleLeft (result :: sched) (i + 1)
         else sched
 
@@ -44,7 +37,7 @@ let schedule p r m =
     |> List.rev
 
 let toPaymentEntryStr { month = m; toInterest = ti; toPrinciple = tp; principleLeft = pl } =
-    sprintf "%5d | $%-7.2f | $%-8.2f | $%.2f" m ti tp pl
+    sprintf "%5d | %-8s | %-9s | %s" m (string ti) (string tp) (string pl)
 
 let printOut paymentSchedule =
     let header = sprintf "%s | %s | %s | %s" "Month" "Interest" "Principle" "Remaining"
@@ -54,7 +47,7 @@ let printOut paymentSchedule =
     |> String.concat "\n"
     |> (fun res -> header + "\n" + res)
 
-let p = 100000.0
+let p = Money 100000.0
 let r = 0.005
 let n = 180
 
