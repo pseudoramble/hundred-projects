@@ -26,7 +26,11 @@ let primes n =
             |> fun lst -> runTest lst n Set.empty
             |> Set.difference (Set.ofSeq startSeq)
 
-// let lePrimes = primes 1
-// printfn "%A" lePrimes
+let lePrimes = primes 1024
+printfn "%A" <| lePrimes
+Seq.rev lePrimes
+|> Seq.take 10
+|> (fun values -> printfn "%A" values)
+
 // printfn "(length = %d)" <| Seq.length lePrimes
 // printfn "(last prime = %d)" <| Seq.last lePrimes

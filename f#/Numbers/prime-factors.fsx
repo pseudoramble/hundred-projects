@@ -38,5 +38,6 @@ for i in 2 .. 16 do
     then printfn "Prime factors of %d = %A" i (primeFactors i)
     else printfn "You done messed up on %d (expected = %A, actual = %A)" i <| Map.find i knownPrimeFactors <| primeFactors i
 
-let i = 2147483600
-printfn "Prime factors of %d = %A" i (primeFactors i)
+(* printfn "Prime factors of %d = %A" 2147483600 (primeFactors 2147483600) *)
+(* printfn "Prime factors of %d =  %A" 16807 (primeFactors 16807) *)
+printfn "Prime factors of %d = %A" 27184903 (primeFactors 27184903)
