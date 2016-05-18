@@ -40,3 +40,4 @@ nosetests.xml
 
 # paket dependency manager
 paket.exe
+packages/
