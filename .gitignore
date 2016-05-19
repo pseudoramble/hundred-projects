@@ -38,6 +38,9 @@ nosetests.xml
 # For Pycharm
 .idea/
 
+# Executables, for now
+*.exe
+
 # paket dependency manager
 paket.exe
 packages/

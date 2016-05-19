@@ -29,7 +29,6 @@ module RNG =
     open FSharpx.Collections
 
     type Bounds =
-        | Min of int
         | Max of int
         | Range of int * int
     
@@ -62,29 +61,23 @@ module RNG =
         
         nextAux rng
 
-    let nextMin rng min =
-        let rngMax = Core.int.MaxValue
-        
-        match LazyList.head rng with
-            | n when n < min -> (n + min, LazyList.tail rng)
-            | n -> (n, LazyList.tail rng)
-
     let nextRange rng min max =
-        (0, rng)
+        let rngMax = Core.int.MaxValue
+        let range = max - min
+        let sample = float (abs (LazyList.head rng)) / float (rngMax)
+
+        (int (sample * float range) + min, LazyList.tail rng)
 
     let next rng bounds =
         match bounds with
-            | Some (Range (min, max)) -> (LazyList.head rng, LazyList.tail rng)
-            | Some (Min min) -> nextMin rng min
+            | Some (Range (min, max)) -> nextRange rng min max
             | Some (Max max) -> nextMax rng max
-                | None -> (LazyList.head rng, LazyList.tail rng)
+            | None -> (LazyList.head rng, LazyList.tail rng)
 
-    let take rng bounds total =
-        let count = defaultArg total 1
-        
+    let take rng total bounds =
         let rec takeAux rng curCount results =
             let (nextValue, nextRng) = next rng bounds
             if curCount = 1 then (LazyList.cons nextValue results, nextRng)
             else takeAux nextRng (curCount - 1) (LazyList.cons nextValue results)
         
-        takeAux rng count LazyList.empty
+        takeAux rng total LazyList.empty

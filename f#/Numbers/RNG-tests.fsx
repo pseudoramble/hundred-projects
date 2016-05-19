@@ -7,29 +7,41 @@ open FSharpx.Collections
 let a, c, m, seed = (1103515245, 12345, Core.int.MaxValue, Core.int.MaxValue)
 let rng = RNG.createLazyListGenerator seed a c m
 
+(* Some ranges to use in the examples below *)
+let maxTest = Some (RNG.Max 20)
+let rangeTest = Some (RNG.Range (10, 20))
+
+(* Test getting the next value from the RNG *)
 RNG.next rng None
 |> fst
 |> printfn "Next (no bounds!) %d"
-
-let maxTest = Some (RNG.Max 20)
-let minTest = Some (RNG.Min (Core.int.MaxValue - 1))
 
 RNG.next rng maxTest
 |> fst
 |> printfn "Next (Max = %A) %d" maxTest
 
-RNG.next rng minTest
+RNG.next rng rangeTest
 |> fst
-|> printfn "Next (Min = %A) %d" minTest
+|> printfn "Next (Max = %A) %d" maxTest
 
-let n = 50000
-RNG.take rng None (Some n)
+(* Take a big sample from the RNG *)
+let n = 500000
+RNG.take rng n None
 |> fst
 |> LazyList.rev
-|> printfn "Take %d! %A" n
+|> (fun lst -> LazyList.length lst = n)
+|> printfn "Did we take %d samples? %b" n
 
-let p = 50
-RNG.take rng minTest (Some p)
+(* Take a sample from the RNG while testing some of the range functionality *)
+let p = 500
+RNG.take rng p maxTest
 |> fst
-|> LazyList.rev
-|> printfn "Take %d! Min = %A. %A" p minTest
+|> LazyList.toSeq
+|> Seq.forall (fun x -> x <= 20)
+|> printfn "Take %d! All values <= %A? %b" p maxTest
+
+RNG.take rng p rangeTest
+|> fst
+|> LazyList.toSeq
+|> Seq.forall (fun x -> x >= 10 && x <= 20)
+|> printfn "Take %d! All values between %A? %b" p rangeTest
