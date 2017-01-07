@@ -39,19 +39,27 @@ let schedule p r m =
 let toPaymentEntryStr { month = m; toInterest = ti; toPrinciple = tp; principleLeft = pl } =
     sprintf "%5d | %-8s | %-9s | %s" m (string ti) (string tp) (string pl)
 
-let printOut paymentSchedule =
-    let header = sprintf "%s | %s | %s | %s" "Month" "Interest" "Principle" "Remaining"
+let printOut paymentSchedule (monthlyRate:Money) n =
+    let header = sprintf "Your amortized payment schedule:\n%s | %s | %s | %s" "Month" "Interest" "Principle" "Remaining"
 
-    paymentSchedule
-    |> List.map toPaymentEntryStr
-    |> String.concat "\n"
-    |> (fun res -> header + "\n" + res)
+    let printedSchedule =
+        paymentSchedule
+        |> List.map toPaymentEntryStr
+        |> String.concat "\n"
+        |> (fun res -> header + "\n" + res)
 
-let p = Money 100000.0
-let r = 0.005
-let n = 180
+    let monthlyPayments = sprintf "You will be paying %s a month for %d years." (string monthlyRate) (n / 12)
+
+    sprintf "%s\n\n%s" monthlyPayments printedSchedule
+
+let toMonthlyRate percentageYearly =
+    percentageYearly / 12.0 / 100.0
+
+let p = Money 250000.0
+let r = toMonthlyRate 3.5(*% APR*)
+let n = 360
 
 let monthly = monthlyPayments p r n
 let paymentSchedule = schedule p r monthly
 
-printfn "%s" <| printOut paymentSchedule
+printfn "%s" <| printOut paymentSchedule monthly n

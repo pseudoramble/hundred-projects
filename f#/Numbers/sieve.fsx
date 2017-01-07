@@ -26,11 +26,18 @@ let primes n =
             |> fun lst -> runTest lst n Set.empty
             |> Set.difference (Set.ofSeq startSeq)
 
-let lePrimes = primes 1024
+#if INTERACTIVE
+let limit = 250
+#else
+let limit = Some (int32 (System.Console.ReadLine()))
+#endif
+
+let lePrimes = primes limit
 printfn "%A" <| lePrimes
 Seq.rev lePrimes
-|> Seq.take 10
-|> (fun values -> printfn "%A" values)
+|> Seq.collect (fun x -> Seq.singleton (string x))
+|> Seq.reduce (fun result next -> sprintf "%s, %s" result next)
+|> printfn "[%s]"
 
 // printfn "(length = %d)" <| Seq.length lePrimes
 // printfn "(last prime = %d)" <| Seq.last lePrimes

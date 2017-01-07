@@ -45,3 +45,14 @@ RNG.take rng p rangeTest
 |> LazyList.toSeq
 |> Seq.forall (fun x -> x >= 10 && x <= 20)
 |> printfn "Take %d! All values between %A? %b" p rangeTest
+
+let lameRng = RNG.createLazyListGenerator 1024 123 233 312
+let lameSample =
+    RNG.take lameRng 5 None
+    |> fst
+    |> LazyList.toSeq
+    |> Seq.rev
+
+for i in lameSample do
+    printfn "i = %d" i
+done
